@@ -78,7 +78,7 @@ Produces the **Plan Output Block**. Runs no install commands. Does not write `ou
 
 The only stage that interacts with the outside world.
 
-**Action 1 — Installation:** executes the install command taken verbatim from the registry entry in the Plan Output Block. The command is verified character-for-character against the registry before execution. Note: some registry entries have multiple install fields (`install_global`, `install_project`, `install_marketplace`) — use `install_global` as the default unless the user has specified otherwise. Never construct or modify install commands.
+**Action 1 — Installation:** executes the install command taken verbatim from the registry entry in the Plan Output Block. The command is verified character-for-character against the registry before execution. Note: some registry entries have multiple install fields (`install_global`, `install_project`, `install_marketplace`) — use `install_global` as the default unless the user has specified otherwise. Never construct or modify install commands. After successful installation, resolves and records the path to the plugin's SKILL.md file — this path is required by Stage 5.
 
 Any error stops the pipeline immediately. Error types and their required responses are defined in `workflow/integrate.md`.
 
@@ -115,7 +115,7 @@ Presents a human-readable summary to the user **in the session language**. The s
 
 **Hard gate: does not proceed until the user types an explicit `yes` (or its unambiguous equivalent in the session language).** Ambiguous input is not accepted. `abort` ends the session.
 
-After confirmation: writes `output/session_log.md` (append — never overwrite), then delivers one closing line and goes silent. The user now interacts with the installed plugin directly. The orchestrator does not speak again.
+After confirmation: writes `output/session_log.md` (append — never overwrite), then reads the installed plugin's SKILL.md from the path recorded in the Integrate Output Block, and executes the user's task following the plugin's instructions exactly. The plugin's instructions govern all output from this point — format, style, and content. The orchestrator does not add its own commentary.
 
 ---
 
@@ -161,7 +161,7 @@ All repository files are written in English. This does not affect the runtime la
 
 ## What You Never Do
 
-- Execute the user's task or produce any deliverable yourself
+- Execute the user's task using your own knowledge, bypassing the installed plugin's SKILL.md instructions
 - Begin the pipeline without a user prompt
 - Skip or merge any pipeline stages
 - Read `registry/` files before Stage 2

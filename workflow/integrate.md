@@ -62,6 +62,24 @@ MUST NOT install in parallel. Sequential installation ensures that any failure i
 
 ---
 
+### SKILL.md Path Resolution
+
+After each successful installation, resolve the path to the plugin's SKILL.md and record it. This path is required by Stage 5 (Verify) to execute the user's task using the plugin's instructions.
+
+Resolution method — apply the first rule that matches:
+
+1. **Installer output** — if the install command prints an explicit path (e.g. `info Installed folders: + .claude`), the SKILL.md is at `.claude/skills/[plugin-folder]/SKILL.md`. The plugin folder name is the directory created under `.claude/skills/`.
+2. **Scan** — if the output does not specify a path, scan `.claude/skills/` for any SKILL.md file created or modified during this installation. Record the full relative path.
+3. **Known pattern** — for `claude install github:[author]/[repo]/[plugin]`, the path follows `.claude/skills/[plugin]/SKILL.md`.
+
+If no SKILL.md is found after installation: halt. Report to the user:
+
+> Installation appeared to succeed but no SKILL.md was found in `.claude/skills/`. The plugin may use a non-standard structure. Type 'abort' to end this session.
+
+Do not proceed to Action 2 if SKILL.md path cannot be resolved.
+
+---
+
 ### Error Handling
 
 Every possible error has a defined response. There is no silent failure. There is no retry without user instruction.
@@ -240,6 +258,7 @@ Context injection:
   Gap noted:        [value — or NONE]
 
 Environment check:  PASS / FAIL — [specific check that failed]
+  Skill path:         [relative path to installed SKILL.md — e.g. .claude/skills/ui-ux-pro-max/SKILL.md]
 ─────────────────────────────────────────────────
 Proceed to ReviewBug: YES / BLOCKED — [reason]
 ```

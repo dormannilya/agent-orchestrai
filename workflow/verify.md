@@ -176,15 +176,21 @@ If writing the log fails: report to the user and ask whether to proceed anyway o
 
 ## Plugin Handoff
 
-After the log is written, deliver one closing line in the session language — then stop.
+After writing the log:
 
-Example (adapt to session language and plugin):
+1. Read the installed plugin's SKILL.md from the path recorded in the `Skill path` field of the Integrate Output Block.
+2. Read `skills/USER_CONTEXT.md` — this is the context already prepared for the plugin.
+3. Execute the user's task in full, following the plugin's SKILL.md instructions exactly. The plugin's instructions take priority over any default orchestrator behaviour. Apply them as if the plugin itself were running.
 
-> All set. [Plugin name] is ready and has your context. Go ahead with your task.
+The orchestrator does not add commentary, does not explain what it is doing, and does not prefix the output with orchestrator language. From this point, all responses follow the plugin's format and style.
 
-After this line: the orchestrator is silent. It does not advise, comment, or continue. Its work is done.
+If the SKILL.md path is missing from the Integrate Output Block: halt and report:
 
-The user now interacts directly with the installed plugin.
+> The plugin's SKILL.md path was not recorded during installation. Cannot execute the task. Please start a new session.
+
+If the SKILL.md file does not exist at the recorded path: halt and report:
+
+> The plugin's SKILL.md was not found at [path]. The installation may be incomplete. Please start a new session.
 
 ---
 
@@ -210,7 +216,7 @@ Outcome: LAUNCHED / ABORTED_BY_USER / BLOCKED — [reason]
 
 ## What Verify Does NOT Do
 
-- Does not launch or execute the plugin itself
+- Does not execute the user's task using its own knowledge — task execution follows the installed plugin's SKILL.md instructions exclusively
 - Does not evaluate plugin output or task results
 - Does not interpret ambiguous user input as confirmation
 - Does not write the session log before receiving explicit confirmation
