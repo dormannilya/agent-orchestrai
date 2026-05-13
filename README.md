@@ -252,11 +252,11 @@ agent-orchestrai/
 
 ## More Projects
 
-### [🔗 Project Name 1](https://github.com/dormannilya/project-placeholder-1)
-> *Placeholder — link to be updated*
+### [🔗 BNLab](https://bnlab.tech)
+> *А service for assessing risks and feasibility in the development and implementation of AI*
 
-### [🔗 Project Name 2](https://github.com/dormannilya/project-placeholder-2)
-> *Placeholder — link to be updated*
+### [🔗 VibeDev](https://vibedevelopers.ru)
+> *AI-assisted development studio with an engineering approach*
 
 ---
 
@@ -511,11 +511,11 @@ agent-orchestrai/
 
 ## Другие проекты
 
-### [🔗 Название проекта 1](https://github.com/dormannilya/project-placeholder-1)
-> *Placeholder — ссылка будет обновлена*
+### [🔗 БНɅаб](https://bnlab.tech)
+> *Сервис оценки рисков и целесообразности при разработке и внедрении ИИ*
 
-### [🔗 Название проекта 2](https://github.com/dormannilya/project-placeholder-2)
-> *Placeholder — ссылка будет обновлена*
+### [🔗 ВайбДев](https://vibedevelopers.ru)
+> *Студия ИИ-ассистированной разработки с инженерным подходом*
 
 ---
 
