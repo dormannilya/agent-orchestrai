@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 Agent-Orchestrai
+# Agent-Orchestrai
 
 **The open-source Claude Code orchestrator that finds the right skill for any task — automatically.**
 
