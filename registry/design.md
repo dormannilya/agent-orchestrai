@@ -37,55 +37,48 @@ Skills and plugins for design tasks. Each entry has been manually verified for i
 - **stars:** 1
 - **status:** ACTIVE
 - **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/README.md
-- **install_note:** Each plugin is installed independently using its own command below. Install only the plugin(s) needed for the task.
+- **install:** /plugin marketplace add Owl-Listener/designer-skills
+- **install_note:** One command adds all 8 plugins to the Marketplace. Then open the Discover tab in Claude Code and install individual plugins as needed.
 
 #### Plugins
 
 ##### `design-research`
-- **install:** claude install github:Owl-Listener/designer-skills/design-research
-- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/design-research/SKILL.md
+- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/design-research/README.md
 - **best_for:** user research, personas, empathy maps, journey maps, user interviews, usability testing, card sorting, research synthesis, insight generation
 - **not_for:** visual design, UI implementation, code, marketing, copywriting, design systems
 
 ##### `design-systems`
-- **install:** claude install github:Owl-Listener/designer-skills/design-systems
-- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/design-systems/SKILL.md
+- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/design-systems/README.md
 - **best_for:** design tokens, component specifications, accessibility standards, theming, design system documentation, component scaffolding, system auditing
 - **not_for:** user research, marketing, code implementation, content writing
 
 ##### `ux-strategy`
-- **install:** claude install github:Owl-Listener/designer-skills/ux-strategy
-- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/ux-strategy/SKILL.md
+- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/ux-strategy/README.md
 - **best_for:** competitive analysis, design principles, experience mapping, product direction, UX strategy, stakeholder alignment, problem framing
 - **not_for:** visual design, UI implementation, user research execution, code
 
 ##### `ui-design`
-- **install:** claude install github:Owl-Listener/designer-skills/ui-design
-- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/ui-design/SKILL.md
+- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/ui-design/README.md
 - **best_for:** screen layouts, layout grids, color systems, typography systems, responsive design, data visualisation, UI component design
 - **not_for:** user research, UX strategy, backend, marketing, content writing
 
 ##### `interaction-design`
-- **install:** claude install github:Owl-Listener/designer-skills/interaction-design
-- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/interaction-design/SKILL.md
+- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/interaction-design/README.md
 - **best_for:** micro-animations, state machines, gesture design, error handling flows, interaction feedback, motion design, transition design
 - **not_for:** user research, visual identity, marketing, code implementation
 
 ##### `prototyping-testing`
-- **install:** claude install github:Owl-Listener/designer-skills/prototyping-testing
-- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/prototyping-testing/SKILL.md
+- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/prototyping-testing/README.md
 - **best_for:** prototyping strategies, usability testing plans, heuristic evaluation, A/B experiment design, fidelity decisions, test plan creation
 - **not_for:** visual design execution, code, marketing, content
 
 ##### `design-ops`
-- **install:** claude install github:Owl-Listener/designer-skills/design-ops
-- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/design-ops/SKILL.md
+- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/design-ops/README.md
 - **best_for:** design critique frameworks, developer handoff specifications, design sprint planning, team workflows, design process documentation
 - **not_for:** user research, visual design, code implementation, marketing
 
 ##### `designer-toolkit`
-- **install:** claude install github:Owl-Listener/designer-skills/designer-toolkit
-- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/designer-toolkit/SKILL.md
+- **readme_url:** https://raw.githubusercontent.com/Owl-Listener/designer-skills/main/designer-toolkit/README.md
 - **best_for:** design rationale documentation, design presentations, portfolio case studies, UX writing, design system adoption, design communication
 - **not_for:** code, user research execution, marketing strategy, backend
 
