@@ -24,7 +24,7 @@ Skills and plugins for design tasks. Each entry has been manually verified for i
 - **status:** ACTIVE
 - **requires:** Python 3.x (for design system search script — verify with `python3 --version` before use)
 - **readme_url:** https://raw.githubusercontent.com/nextlevelbuilder/ui-ux-pro-max-skill/main/README.md
-- **install:** npm install -g uipro-cli && uipro init --ai claude --global
+- **install:** npm install -g uipro-cli && uipro init --ai claude
 - **install_note:** Two-step command — both must succeed. Installs to `~/.claude/skills/`. Alternative via Claude Code Plugin Marketplace: run `/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill` then `/plugin install ui-ux-pro-max@ui-ux-pro-max-skill` inside Claude Code.
 - **best_for:** UI/UX design for any platform, landing pages, SaaS interfaces, dashboards, mobile app UI, design system generation, industry-specific design rules (161 categories), component design, responsive design, visual style selection (67 styles), color palette generation, typography pairing, accessibility audit, anti-pattern checking, React/Next.js/Tailwind/Vue/SwiftUI/Flutter/React Native implementation guidance
 - **not_for:** user research, qualitative interviews, usability test planning, content strategy, copywriting without visual component, backend architecture
