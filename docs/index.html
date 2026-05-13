@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent-Orchestrai — Оркестратор Claude Code</title>
+  <meta name="description" content="Оркестратор Claude Code, который автоматически находит нужный скилл для любой задачи." />
+  <meta property="og:title" content="Agent-Orchestrai" />
+  <meta property="og:description" content="Оркестратор Claude Code, который автоматически находит нужный скилл для любой задачи." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #09090b;
+      --bg-card:   #111115;
+      --bg-hover:  #18181f;
+      --border:    rgba(255,255,255,0.07);
+      --border-lg: rgba(255,255,255,0.12);
+      --text:      #f4f4f5;
+      --muted:     #71717a;
+      --subtle:    #3f3f46;
+      --accent:    #818cf8;
+      --accent-2:  #6366f1;
+      --orange:    #f97316;
+      --green:     #34d399;
+      --radius:    12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px; height: 60px;
+      background: rgba(9,9,11,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 600; font-size: 15px;
+      text-decoration: none; color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .nav-logo .accent { color: var(--accent); }
+
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+
+    .btn-lang {
+      background: var(--bg-card); border: 1px solid var(--border-lg);
+      color: var(--muted); font-family: 'Inter', sans-serif;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.04em;
+      padding: 5px 12px; border-radius: 6px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-lang:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-lang.active { border-color: var(--accent); color: var(--accent); background: rgba(99,102,241,0.08); }
+    .nav-github {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--muted); text-decoration: none; font-size: 13px;
+      padding: 5px 12px; border-radius: 6px;
+      border: 1px solid var(--border); transition: all 0.2s;
+    }
+    .nav-github:hover { color: var(--text); border-color: var(--border-lg); }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+    section { padding: 96px 32px; max-width: 1100px; margin: 0 auto; }
+    .divider { border: none; border-top: 1px solid var(--border); }
+
+    .hero { text-align: center; padding-top: 120px; padding-bottom: 80px; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25);
+      color: var(--accent); font-size: 12px; font-weight: 500;
+      letter-spacing: 0.05em; padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 32px; text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px); font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 20px;
+      background: linear-gradient(160deg, #fff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 19px); color: var(--muted);
+      max-width: 580px; margin: 0 auto 48px; line-height: 1.6;
+    }
+
+    .install-block {
+      display: inline-flex; align-items: center;
+      background: var(--bg-card); border: 1px solid var(--border-lg);
+      border-radius: 10px; overflow: hidden; margin-bottom: 40px; max-width: 100%;
+    }
+
+    .install-cmd {
+      font-family: 'Geist Mono', monospace; font-size: 13px;
+      color: var(--green); padding: 14px 20px; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; max-width: 520px;
+    }
+    .install-cmd .prompt { color: var(--subtle); margin-right: 6px; }
+
+    .copy-btn {
+      background: transparent; border: none;
+      border-left: 1px solid var(--border-lg);
+      color: var(--muted); cursor: pointer;
+      padding: 14px 16px; transition: all 0.2s;
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; font-family: 'Inter', sans-serif; white-space: nowrap;
+    }
+    .copy-btn:hover { color: var(--text); background: var(--bg-hover); }
+    .copy-btn.copied { color: var(--green); }
+
+    .hero-cta { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent-2); color: #fff; text-decoration: none;
+      font-size: 14px; font-weight: 600; padding: 11px 22px;
+      border-radius: 8px; transition: all 0.2s;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--muted); text-decoration: none;
+      font-size: 14px; font-weight: 500; padding: 11px 22px;
+      border-radius: 8px; border: 1px solid var(--border-lg); transition: all 0.2s;
+    }
+    .btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(24px, 4vw, 40px); font-weight: 700;
+      letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 16px;
+    }
+    .section-sub {
+      color: var(--muted); font-size: 16px;
+      max-width: 520px; margin: 0 auto 64px;
+    }
+
+    .pipeline-section { text-align: center; }
+
+    .pipeline {
+      display: flex; align-items: flex-start; justify-content: center;
+      gap: 0; flex-wrap: wrap;
+    }
+
+    .pipe-step {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 10px; flex: 1; min-width: 110px; max-width: 160px;
+      position: relative; padding: 0 8px;
+    }
+    .pipe-step::after {
+      content: '→'; position: absolute; right: -10px; top: 16px;
+      color: var(--subtle); font-size: 16px;
+    }
+    .pipe-step:last-child::after { display: none; }
+
+    .pipe-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: var(--bg-card); border: 1px solid var(--border-lg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; transition: border-color 0.2s;
+    }
+    .pipe-step:hover .pipe-icon { border-color: var(--accent); }
+
+    .pipe-name { font-size: 12px; font-weight: 600; letter-spacing: 0.02em; }
+    .pipe-desc { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.4; }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .feature-card:hover { border-color: var(--border-lg); background: var(--bg-hover); }
+    .feature-icon { font-size: 28px; margin-bottom: 16px; }
+    .feature-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .feature-text { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    .skills-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .skills-table th {
+      text-align: left; padding: 10px 20px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .skills-table td { padding: 18px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .skills-table tr:last-child td { border-bottom: none; }
+    .skills-table tr:hover td { background: var(--bg-card); }
+    .domain-name { font-weight: 600; margin-bottom: 4px; }
+    .domain-plugins { color: var(--muted); font-size: 13px; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 100px;
+    }
+    .badge-active { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+    .badge-soon   { background: rgba(113,113,122,0.1); color: var(--muted); border: 1px solid var(--border); }
+
+    .repo-card {
+      background: var(--bg-card); border: 1px solid var(--border-lg);
+      border-radius: var(--radius); padding: 28px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .repo-info { display: flex; align-items: center; gap: 16px; }
+    .repo-avatar { font-size: 36px; }
+    .repo-title { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+    .repo-meta { font-size: 13px; color: var(--muted); }
+
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .project-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px;
+      text-decoration: none; color: var(--text);
+      display: flex; flex-direction: column; gap: 10px;
+      transition: border-color 0.25s, transform 0.2s;
+    }
+    .project-card:hover { border-color: var(--border-lg); transform: translateY(-2px); }
+    .project-name { font-size: 17px; font-weight: 600; }
+    .project-desc { font-size: 14px; color: var(--muted); line-height: 1.55; flex: 1; }
+    .project-link { font-size: 12px; color: var(--accent); }
+
+    .cta-section { text-align: center; border-top: 1px solid var(--border); }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+      max-width: 1100px; margin: 0 auto;
+      font-size: 13px; color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 20px; }
+
+    .ru { display: block; }
+    .en { display: none; }
+    body.lang-en .ru { display: none; }
+    body.lang-en .en { display: block; }
+    .ru-inline { display: inline; }
+    .en-inline { display: none; }
+    body.lang-en .ru-inline { display: none; }
+    body.lang-en .en-inline { display: inline; }
+    .ru-flex { display: inline-flex; }
+    .en-flex { display: none; }
+    body.lang-en .ru-flex { display: none; }
+    body.lang-en .en-flex { display: inline-flex; }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; }
+      section { padding: 64px 20px; }
+      .pipe-step::after { display: none; }
+      .repo-card { flex-direction: column; }
+      .install-cmd { max-width: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <span class="accent"></span> Agent-Orchestrai
+  </a>
+  <div class="nav-right">
+    <button class="btn-lang active" onclick="setLang('ru')" id="btn-ru">РУ</button>
+    <button class="btn-lang" onclick="setLang('en')" id="btn-en">EN</button>
+    <a class="nav-github" href="https://github.com/dormannilya/agent-orchestrai" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      GitHub
+    </a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">Open Source · Claude Code · MIT</div>
+
+  <h1>
+    <span class="ru">Нужный навык — автоматически</span>
+    <span class="en">The right skill — automatically</span>
+  </h1>
+
+  <p class="hero-sub">
+    <span class="ru">Оркестратор Claude Code, который сам находит нужного агента для задачи в базе, устанавливает его и передает ему контекст вашего проекта.</span>
+    <span class="en">A Claude Code orchestrator that finds the right skill agent, installs it, and hands it your project context — without any manual configuration.</span>
+  </p>
+
+  <div class="install-block">
+    <div class="install-cmd">
+      <span class="prompt">$</span>bash &lt;(curl -fsSL https://raw.githubusercontent.com/dormannilya/agent-orchestrai/main/installer.sh)
+    </div>
+    <button class="copy-btn" id="copy-btn" onclick="copyInstall()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      <span class="ru-inline">Копировать</span>
+      <span class="en-inline">Copy</span>
+    </button>
+  </div>
+
+  <div class="hero-cta">
+    <a class="btn-primary" href="https://github.com/dormannilya/agent-orchestrai" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      GitHub
+    </a>
+    <a class="btn-secondary" href="https://github.com/dormannilya/agent-orchestrai#readme" target="_blank">
+      <span class="ru-inline">Читать README</span>
+      <span class="en-inline">Read README</span>
+    </a>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section class="pipeline-section">
+  <p class="section-label">Pipeline</p>
+  <h2 class="section-title">
+    <span class="ru">5 этапов — один результат</span>
+    <span class="en">5 stages — one result</span>
+  </h2>
+  <p class="section-sub">
+    <span class="ru">Каждая сессия проходит надежный end-to-end пайплайн. Ни один этап не пропускается и не объединяется.</span>
+    <span class="en">Every session follows a secure end-to-end pipeline. No stage is skipped or merged.</span>
+  </p>
+
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-icon">📋</div>
+      <div class="pipe-name">Define</div>
+      <div class="pipe-desc">
+        <span class="ru">Читает задачу<br>и контекст</span>
+        <span class="en">Reads task<br>and context</span>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">🎯</div>
+      <div class="pipe-name">Plan</div>
+      <div class="pipe-desc">
+        <span class="ru">Скоринг и<br>выбор скилла</span>
+        <span class="en">Scores and<br>selects skill</span>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">⚙️</div>
+      <div class="pipe-name">Integrate</div>
+      <div class="pipe-desc">
+        <span class="ru">Установка и<br>инжект контекста</span>
+        <span class="en">Install and<br>inject context</span>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">🔍</div>
+      <div class="pipe-name">ReviewBug</div>
+      <div class="pipe-desc">
+        <span class="ru">Проверка<br>окружения</span>
+        <span class="en">Verify<br>environment</span>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">✅</div>
+      <div class="pipe-name">Verify</div>
+      <div class="pipe-desc">
+        <span class="ru">Подтверждение<br>и запуск</span>
+        <span class="en">Confirm<br>and execute</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section>
+  <p class="section-label">
+    <span class="ru">Возможности</span>
+    <span class="en">Features</span>
+  </p>
+  <h2 class="section-title" style="margin-bottom:48px">
+    <span class="ru">Умный, надежный, прозрачный</span>
+    <span class="en">Smart, reliable, transparent</span>
+  </h2>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🧠</div>
+      <div class="feature-title">
+        <span class="ru">Трехуровневый матчинг</span>
+        <span class="en">Three-level matching</span>
+      </div>
+      <p class="feature-text">
+        <span class="ru">Фильтрация по домену → семантический скоринг (+2 / +1 / −2) → верификация README финалистов. Лучший скилл, не первый попавшийся.</span>
+        <span class="en">Category filter → semantic scoring (+2 / +1 / −2) → README verification for finalists. Best skill, not first available.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👤</div>
+      <div class="feature-title">
+        <span class="ru">Контекст передается автоматически</span>
+        <span class="en">Context injected automatically</span>
+      </div>
+      <p class="feature-text">
+        <span class="ru">Заполните USER_INFO.md и PROJECT_INFO.md один раз — оркестратор передаст ваш контекст каждому установленному плагину.</span>
+        <span class="en">Fill USER_INFO.md and PROJECT_INFO.md once — the orchestrator passes your context to every installed plugin.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <div class="feature-title">
+        <span class="ru">Безопасность по умолчанию</span>
+        <span class="en">Security by default</span>
+      </div>
+      <p class="feature-text">
+        <span class="ru">Команды установки берутся verbatim из реестра. Никакого prompt injection. Установка только после вашего явного «да».</span>
+        <span class="en">Install commands taken verbatim from registry. No prompt injection. Nothing installs without your explicit confirmation.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <div class="feature-title">
+        <span class="ru">Каждая сессия залогирована</span>
+        <span class="en">Every session logged</span>
+      </div>
+      <p class="feature-text">
+        <span class="ru">output/session_log.md: какой скилл выбран, почему, статус каждого этапа, исход. Полный аудит без лишних усилий.</span>
+        <span class="en">output/session_log.md: which skill was selected, why, every stage status, outcome. Full audit trail automatically.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌍</div>
+      <div class="feature-title">
+        <span class="ru">Любой язык</span>
+        <span class="en">Any language</span>
+      </div>
+      <p class="feature-text">
+        <span class="ru">Напишите на русском, испанском или немецком — оркестратор определит язык сессии и ответит на нем же.</span>
+        <span class="en">Write in Russian, Spanish, or German — the orchestrator detects the session language and responds accordingly.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔌</div>
+      <div class="feature-title">
+        <span class="ru">Все форматы установки</span>
+        <span class="en">All install formats</span>
+      </div>
+      <p class="feature-text">
+        <span class="ru">claude install, npx skills add, git clone, CLI — поддерживаются все форматы реальных репозиториев без ручной адаптации.</span>
+        <span class="en">claude install, npx skills add, git clone, CLI — all formats used by real repositories, handled without manual adaptation.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section>
+  <p class="section-label">
+    <span class="ru">Реестр скиллов</span>
+    <span class="en">Skill Registry</span>
+  </p>
+  <h2 class="section-title">
+    <span class="ru">Проверенные источники</span>
+    <span class="en">Verified sources</span>
+  </h2>
+  <p class="section-sub" style="margin-bottom:40px">
+    <span class="ru">Каждая запись реестра проверена вручную: команда установки протестирована, best_for и not_for заполнены честно.</span>
+    <span class="en">Every registry entry is manually verified: install command tested, best_for and not_for filled honestly.</span>
+  </p>
+
+  <table class="skills-table">
+    <thead>
+      <tr>
+        <th><span class="ru">Домен</span><span class="en">Domain</span></th>
+        <th><span class="ru">Скиллы</span><span class="en">Skills</span></th>
+        <th><span class="ru">Статус</span><span class="en">Status</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="domain-name">🎨 Design</div></td>
+        <td>
+          <div class="domain-plugins">
+            <span class="ru">UI/UX Pro Max · Designer Skills (8 плагинов) · Mobile App UI · Mobile Design Standards · UI Design System</span>
+            <span class="en">UI/UX Pro Max · Designer Skills (8 plugins) · Mobile App UI · Mobile Design Standards · UI Design System</span>
+          </div>
+        </td>
+        <td><span class="badge badge-active">✓ Active</span></td>
+      </tr>
+      <tr>
+        <td><div class="domain-name">📣 Marketing</div></td>
+        <td><div class="domain-plugins">—</div></td>
+        <td>
+          <span class="badge badge-soon ru-flex">Скоро</span>
+          <span class="badge badge-soon en-flex">Soon</span>
+        </td>
+      </tr>
+      <tr>
+        <td><div class="domain-name">💻 Development</div></td>
+        <td><div class="domain-plugins">—</div></td>
+        <td>
+          <span class="badge badge-soon ru-flex">Скоро</span>
+          <span class="badge badge-soon en-flex">Soon</span>
+        </td>
+      </tr>
+      <tr>
+        <td><div class="domain-name">✍️ Content</div></td>
+        <td><div class="domain-plugins">—</div></td>
+        <td>
+          <span class="badge badge-soon ru-flex">Скоро</span>
+          <span class="badge badge-soon en-flex">Soon</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<hr class="divider" />
+
+<section>
+  <p class="section-label">
+    <span class="ru">Экосистема</span>
+    <span class="en">Ecosystem</span>
+  </p>
+  <h2 class="section-title">
+    <span class="ru">Проекты</span>
+    <span class="en">Projects</span>
+  </h2>
+
+  <div class="repo-card" style="margin-top:40px">
+    <div class="repo-info">
+      <div class="repo-avatar"></div>
+      <div>
+        <div class="repo-title">Agent-Orchestrai</div>
+        <div class="repo-meta">
+          <span class="ru">Этот репозиторий · MIT · Claude Code</span>
+          <span class="en">This repository · MIT · Claude Code</span>
+        </div>
+      </div>
+    </div>
+    <a class="btn-secondary" href="https://github.com/dormannilya/agent-orchestrai" target="_blank">GitHub →</a>
+  </div>
+
+  <div class="projects-grid" style="margin-top:16px">
+    <a class="project-card" href="https://bnlab.tech" target="_blank">
+      <div class="project-name">БНɅаб</div>
+      <p class="project-desc">
+        <span class="ru">Сервис оценки рисков и целесообразности при разработке и внедрении ИИ</span>
+        <span class="en">AI risk assessment and feasibility evaluation service for AI development and deployment</span>
+      </p>
+      <div class="project-link">bnlab.tech →</div>
+    </a>
+    <a class="project-card" href="https://vibedevelopers.ru" target="_blank">
+      <div class="project-name">ВайбДев</div>
+      <p class="project-desc">
+        <span class="ru">Студия ИИ-ассистированной разработки с инженерным подходом</span>
+        <span class="en">AI-assisted software development studio with a rigorous engineering mindset</span>
+      </p>
+      <div class="project-link">vibedevelopers.ru →</div>
+    </a>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section class="cta-section">
+  <h2 class="section-title">
+    <span class="ru">Готовы начать?</span>
+    <span class="en">Ready to start?</span>
+  </h2>
+  <p class="section-sub" style="margin-bottom:40px">
+    <span class="ru">Клонируйте репозиторий, опишите задачу — получите результат.</span>
+    <span class="en">Clone the repository, describe your task — get the result.</span>
+  </p>
+  <div class="hero-cta">
+    <a class="btn-primary" href="https://github.com/dormannilya/agent-orchestrai" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      <span class="ru-inline">Открыть на GitHub</span>
+      <span class="en-inline">View on GitHub</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Agent-Orchestrai · MIT License</span>
+  <div class="footer-links">
+    <a href="https://github.com/dormannilya/agent-orchestrai" target="_blank">GitHub</a>
+    <a href="https://bnlab.tech" target="_blank">БНɅаб</a>
+    <a href="https://vibedevelopers.ru" target="_blank">ВайбДев</a>
+  </div>
+</footer>
+
+<script>
+  function setLang(l) {
+    document.body.className = 'lang-' + l;
+    document.documentElement.lang = l;
+    document.getElementById('btn-ru').classList.toggle('active', l === 'ru');
+    document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  }
+
+  function copyInstall() {
+    const cmd = 'bash <(curl -fsSL https://raw.githubusercontent.com/dormannilya/agent-orchestrai/main/installer.sh)';
+    const btn = document.getElementById('copy-btn');
+    navigator.clipboard.writeText(cmd).then(() => {
+      btn.classList.add('copied');
+      const ru = btn.querySelector('.ru-inline');
+      const en = btn.querySelector('.en-inline');
+      const isRu = !document.body.classList.contains('lang-en');
+      if (isRu) ru.textContent = 'Скопировано!';
+      else en.textContent = 'Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        ru.textContent = 'Копировать';
+        en.textContent = 'Copy';
+      }, 2000);
+    });
+  }
+
+  setLang('ru');
+</script>
+</body>
+</html>
