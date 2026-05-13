@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 Agent OrchestrAI
+# 🤖 Agent-Orchestrai
 
 **The open-source Claude Code orchestrator that finds the right skill for any task — automatically.**
 
@@ -18,9 +18,9 @@
 
 <br>
 
-## What is Agent OrchestrAI?
+## What is Agent-Orchestrai?
 
-Agent OrchestrAI is a **Claude Code orchestrator** — not an agent that solves tasks directly, but one that finds the right specialist agent for each task, installs it, briefs it with your context, and hands control over.
+Agent-Orchestrai is a **Claude Code orchestrator** — not an agent that solves tasks directly, but one that finds the right specialist agent for each task, installs it, briefs it with your context, and hands control over.
 
 Think of it as a staffing agency: you describe what you need, the orchestrator finds the best available expert, and the expert does the work.
 
@@ -277,11 +277,11 @@ To add a skill to the registry: verify the install command works, fill in `best_
 
 <br>
 
-## Что такое Agent OrchestrAI?
+## Что такое Agent-Orchestrai?
 
-Agent OrchestrAI — это **оркестратор для Claude Code**. Он не решает задачи самостоятельно — он находит подходящего специализированного агента для каждой задачи, устанавливает его, передаёт ему контекст о вас и вашем проекте, и уступает место.
+Agent-Orchestrai — это **оркестратор для Claude Code**. Он не решает задачи самостоятельно — он находит подходящего специализированного агента для каждой задачи, устанавливает его, передает ему контекст о вас и вашем проекте, и уступает место.
 
-Думайте о нём как о кадровом агентстве: вы описываете задачу, оркестратор подбирает лучшего доступного специалиста, специалист выполняет работу.
+Думайте о нем как о кадровом агентстве: вы описываете задачу, оркестратор подбирает лучшего доступного специалиста, специалист выполняет работу.
 
 ```
 Вы описываете задачу → Оркестратор находит нужный скилл → Скилл выполняет задачу → Вы получаете результат
@@ -302,10 +302,10 @@ Agent OrchestrAI — это **оркестратор для Claude Code**. Он 
 | Этап | Что происходит |
 |---|---|
 | **📋 Define** | Читает вашу задачу, контекстные файлы, определяет язык. Решений не принимает. |
-| **🎯 Plan** | Сканирует реестр скиллов трёхуровневым алгоритмом. Оценивает каждого кандидата. Читает README лучших. |
+| **🎯 Plan** | Сканирует реестр скиллов трехуровневым алгоритмом. Оценивает каждого кандидата. Читает README лучших. |
 | **⚙️ Integrate** | Устанавливает выбранный скилл. Инжектирует контекст пользователя/проекта. Фиксирует путь к SKILL.md. |
 | **🔍 ReviewBug** | Проверяет корректность окружения. До 2 автоматических патчей для мелких проблем. |
-| **✅ Verify** | Показывает итоговое резюме. Ждёт явного `да`. Пишет лог сессии. |
+| **✅ Verify** | Показывает итоговое резюме. Ждет явного `да`. Пишет лог сессии. |
 | **🚀 Execute** | Читает SKILL.md плагина и выполняет вашу задачу по его инструкциям — в той же сессии. |
 
 ### Алгоритм матчинга
@@ -369,7 +369,7 @@ cd agent-orchestrai
 3. Откройте [Claude Code](https://docs.anthropic.com/en/docs/claude-code), подключите репозиторий
 4. Опишите задачу на любом языке
 
-**Всё.** Оркестратор делает остальное.
+**Все.** Оркестратор делает остальное.
 
 ---
 
