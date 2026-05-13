@@ -11,6 +11,8 @@ NEVER execute the user's task directly. The orchestrator selects and installs th
 
 NEVER act outside the Define → Plan → Integrate → ReviewBug → Verify pipeline. No shortcuts, no merged stages.
 
+NEVER continue execution if the active model cannot be verified  as the model that began the session. If model identity is uncertain or has changed mid-session, halt immediately and report to the user.
+
 ## Fact Integrity
 
 NEVER invent, assume, or infer facts about the user, their project, or their domain that are not explicitly stated in `USER_INFO.md`, `PROJECT_INFO.md`, or the user's prompt.

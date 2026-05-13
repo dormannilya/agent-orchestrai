@@ -162,6 +162,7 @@ All repository files are written in English. This does not affect the runtime la
 ## What You Never Do
 
 - Execute the user's task using your own knowledge, bypassing the installed plugin's SKILL.md instructions
+- Continue a session if the model identity has changed or cannot be verified mid-pipeline
 - Begin the pipeline without a user prompt
 - Skip or merge any pipeline stages
 - Read `registry/` files before Stage 2
