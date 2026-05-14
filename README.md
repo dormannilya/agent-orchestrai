@@ -49,6 +49,23 @@ Every session runs through a fixed 5-stage pipeline:
 | **✅ Verify** | Presents a summary. Waits for your explicit `yes`. Writes session log. |
 | **🚀 Execute** | Reads the plugin's SKILL.md and executes your task following its instructions — in the same session. |
 
+### Adaptability and security
+
+Agent-Orchestrai can be deployed into a Claude Code environment, either locally or through the browser version. It provides a growing skill database that includes both individual skills and structured skill sets.
+
+The repository can also be cloned and extended with custom skills. Any added skill is immediately included in the task-matching logic and can be selected for future workflows.
+
+| Capability | Description |
+|---|---|
+| Skill aggregation | Maintains an expandable database of skills and skill sets |
+| Task matching | Matches the user task against available skills and selects the most relevant one |
+| Automatic setup | Installs the required skill according to its installation rules |
+| Isolated execution | Runs workflows in a separate branch instead of modifying `main` directly |
+| Private-repo safe | Works locally or inside private repositories without exposing project data |
+| Extensible registry | Allows developers and users to add their own skills for any workflow type |
+
+> The goal is to make AI-assisted development faster and safer by routing each task to the right skill, setting it up automatically, and keeping execution isolated from the main codebase.
+
 ### Matching Algorithm
 
 The Plan stage uses a **3-level algorithm** to find the best skill:
@@ -307,6 +324,23 @@ Agent-Orchestrai — это **оркестратор для Claude Code**. Он 
 | **🔍 ReviewBug** | Проверяет корректность окружения. До 2 автоматических патчей для мелких проблем. |
 | **✅ Verify** | Показывает итоговое резюме. Ждет явного `да`. Пишет лог сессии. |
 | **🚀 Execute** | Читает SKILL.md плагина и выполняет вашу задачу по его инструкциям — в той же сессии. |
+
+### Адаптивность и безопасность
+
+Agent-Orchestrai можно развернуть в окружении Claude Code — локально или через браузерную версию. Проект включает расширяемую базу навыков, в которой есть как отдельные навыки, так и структурированные наборы навыков.
+
+Репозиторий можно клонировать и дополнять собственными навыками. Любой добавленный навык сразу учитывается в логике сопоставления задач и может быть выбран для будущих workflow.
+
+| Возможность | Описание |
+|---|---|
+| Агрегация навыков | Поддерживает расширяемую базу навыков и наборов навыков |
+| Сопоставление задач | Сопоставляет задачу пользователя с доступными навыками и выбирает наиболее подходящий |
+| Автоматическая установка | Устанавливает нужный навык согласно его правилам установки |
+| Изолированное выполнение | Запускает workflow в отдельной ветке, не изменяя `main` напрямую |
+| Безопасность для private repo | Работает локально или внутри приватных репозиториев без раскрытия проектных данных |
+| Расширяемый registry | Позволяет разработчикам и пользователям добавлять собственные навыки под любые типы workflow |
+
+> Цель проекта — сделать AI-assisted development быстрее и безопаснее: направлять каждую задачу к подходящему навыку, автоматически выполнять настройку и сохранять выполнение изолированным от основной кодовой базы.
 
 ### Алгоритм матчинга
 
